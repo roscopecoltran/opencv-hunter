@@ -259,6 +259,8 @@ macro(ocv_list_filterout lst regex)
   endforeach()
 endmacro()
 
+include(CMakeFindDependencyMacro)
+
 if("@ZLIB_FOUND@")
   find_dependency(ZLIB CONFIG)
 endif()
