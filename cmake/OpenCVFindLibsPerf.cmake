@@ -2,6 +2,31 @@
 #  Detect other 3rd-party performance and math libraries
 # ----------------------------------------------------------------------------
 
+# --- Lapack ---
+# if(WITH_LAPACK)
+#   if(WIN32)
+#     set(BLA_STATIC 1)
+#   endif()
+#   find_package(LAPACK)
+#   if(LAPACK_FOUND)
+#     find_path(LAPACKE_INCLUDE_DIR "lapacke.h")
+#     find_path(MKL_LAPACKE_INCLUDE_DIR "mkl_lapack.h")
+#     if(LAPACKE_INCLUDE_DIR)
+#       ocv_include_directories(${LAPACKE_INCLUDE_DIR})
+#       set(HAVE_LAPACK 1)
+#       set(HAVE_LAPACK_GENERIC 1)
+#     elseif(MKL_LAPACKE_INCLUDE_DIR)
+#       ocv_include_directories(${MKL_LAPACKE_INCLUDE_DIR})
+#       set(HAVE_LAPACK 1)
+#       set(HAVE_LAPACK_MKL 1)
+#     elseif(APPLE)
+#       set(HAVE_LAPACK 1)
+#       set(HAVE_LAPACK_APPLE 1)
+#     endif()
+#     list(APPEND OPENCV_LINKER_LIBS ${LAPACK_LIBRARIES})
+#   endif()
+# endif()
+
 # --- TBB ---
 if(WITH_TBB)
   include("${OpenCV_SOURCE_DIR}/cmake/OpenCVDetectTBB.cmake")
@@ -43,11 +68,11 @@ if(WITH_EIGEN)
         INTERFACE_INCLUDE_DIRECTORIES
     )
   else()
-    find_path(EIGEN_INCLUDE_PATH "Eigen/Core"
-              PATHS /usr/local /opt /usr $ENV{EIGEN_ROOT}/include ENV ProgramFiles ENV ProgramW6432
-              PATH_SUFFIXES include/eigen3 include/eigen2 Eigen/include/eigen3 Eigen/include/eigen2
-              DOC "The path to Eigen3/Eigen2 headers"
-              CMAKE_FIND_ROOT_PATH_BOTH)
+  find_path(EIGEN_INCLUDE_PATH "Eigen/Core"
+            PATHS /usr/local /opt /usr $ENV{EIGEN_ROOT}/include ENV ProgramFiles ENV ProgramW6432
+            PATH_SUFFIXES include/eigen3 include/eigen2 Eigen/include/eigen3 Eigen/include/eigen2
+            DOC "The path to Eigen3/Eigen2 headers"
+            CMAKE_FIND_ROOT_PATH_BOTH)
   endif()
 
   if(EIGEN_INCLUDE_PATH)

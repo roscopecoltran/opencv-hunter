@@ -1,5 +1,5 @@
 set(the_description "High-level GUI and Media I/O")
-ocv_add_module(highgui opencv_imgproc opencv_imgcodecs opencv_videoio WRAP python)
+ocv_add_module(highgui opencv_imgproc OPTIONAL opencv_imgcodecs opencv_videoio WRAP python)
 
 # ----------------------------------------------------------------------------
 #  CMake file for highgui. See root CMakeLists.txt
@@ -7,7 +7,7 @@ ocv_add_module(highgui opencv_imgproc opencv_imgcodecs opencv_videoio WRAP pytho
 #   Jose Luis Blanco, 2008
 # ----------------------------------------------------------------------------
 
-if(WINRT_8_1)
+if(DEFINED WINRT AND NOT DEFINED ENABLE_WINRT_MODE_NATIVE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /ZW")
 endif()
 
@@ -41,17 +41,6 @@ if(HAVE_QT5)
        ${CMAKE_CURRENT_LIST_DIR}/src/window_QT.cpp
        ${CMAKE_CURRENT_LIST_DIR}/src/window_QT.h
        ${_RCC_OUTFILES})
-
-  # Hunter patch to load qt resources when static linking
-  # Hunter has only Qt5, so its guarded by if(HAVE_QT5)
-  if(NOT BUILD_SHARED_LIBS)
-    install(
-        FILES
-          ${CMAKE_CURRENT_LIST_DIR}/static_opencv_qt_resources.cpp
-        DESTINATION
-          "src/qt/plugins"
-    )
-  endif()
 
   foreach(dt5_dep Core Gui Widgets Test Concurrent)
     add_definitions(${Qt5${dt5_dep}_DEFINITIONS})

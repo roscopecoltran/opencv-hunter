@@ -14,6 +14,7 @@ endif()
 # --- QT4 ---
 ocv_clear_vars(HAVE_QT HAVE_QT5)
 if(WITH_QT)
+  #  if(HUNTER_ENABLED) add ?!
   if(NOT WITH_QT EQUAL 4)
     hunter_add_package(Qt)
     find_package(Qt5Core)

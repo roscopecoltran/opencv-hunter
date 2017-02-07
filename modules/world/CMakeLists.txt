@@ -14,19 +14,20 @@ function(include_one_module m)
 endfunction()
 
 if(NOT OPENCV_INITIAL_PASS)
+  set(ENABLE_PRECOMPILED_HEADERS OFF CACHE INTERNAL "" FORCE)
   project(opencv_world)
 
   message(STATUS "Processing WORLD modules...")
   foreach(m ${OPENCV_MODULES_BUILD})
     if(OPENCV_MODULE_${m}_IS_PART_OF_WORLD)
       message(STATUS "    module ${m}...")
-      set(CMAKE_CURRENT_SOURCE_DIR ${OPENCV_MODULE_${m}_LOCATION})
+      set(CMAKE_CURRENT_SOURCE_DIR "${OPENCV_MODULE_${m}_LOCATION}")
       #add_subdirectory("${OPENCV_MODULE_${m}_LOCATION}" ${CMAKE_CURRENT_BINARY_DIR}/${m})
       include_one_module(${m})
     endif()
   endforeach()
   message(STATUS "Processing WORLD modules... DONE")
-  set(CMAKE_CURRENT_SOURCE_DIR OPENCV_MODULE_${opencv_world}_LOCATION)
+  set(CMAKE_CURRENT_SOURCE_DIR "${OPENCV_MODULE_opencv_world_LOCATION}")
 endif()
 
 ocv_add_module(world opencv_core)
@@ -59,27 +60,3 @@ endif()
 if(BUILD_opencv_highgui AND OPENCV_MODULE_opencv_highgui_IS_PART_OF_WORLD)
   ocv_highgui_configure_target()
 endif()
-
-if(IOS OR APPLE)
-  set(merge_libs "")
-  macro(ios_include_3party_libs)
-    foreach(l ${ARGN})
-      add_dependencies(${the_module} ${l})
-      list(APPEND merge_libs "$<TARGET_LINKER_FILE:${l}>")
-    endforeach()
-  endmacro()
-
-  if(WITH_PNG)
-    ios_include_3party_libs(${ZLIB_LIBRARIES} ${PNG_LIBRARIES})
-  endif()
-
-  if(WITH_JPEG)
-    ios_include_3party_libs(${JPEG_LIBRARIES})
-  endif()
-
-  add_custom_command(TARGET ${the_module} POST_BUILD
-    COMMAND /usr/bin/libtool -static -o ${CMAKE_CURRENT_BINARY_DIR}/${the_module}_fat.a $<TARGET_LINKER_FILE:${the_module}> ${merge_libs}
-    COMMAND mv ${CMAKE_CURRENT_BINARY_DIR}/${the_module}_fat.a $<TARGET_LINKER_FILE:${the_module}>
-  )
-endif()
-
