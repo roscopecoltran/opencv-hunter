@@ -6,7 +6,9 @@
 #
 # ----------------------------------------------------------------------------
 
-
+# Added by rosco
+SET(HUNTER_GATE_VERSION v0.17.18)
+SET(HUNTER_GATE_SHA1 ffd57842beb628402ea918508718c6f84abe3771)
 
 include(cmake/OpenCVMinDepVersions.cmake)
 
@@ -88,10 +90,11 @@ if(DEFINED CMAKE_BUILD_TYPE)
   set_property( CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES} )
 endif()
 
+# Hunter Package Manager
 include("cmake/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.17.7.tar.gz"
-    SHA1 "78219f42c3737adcc161c52b9f71ce65a3d775c2"
+    URL "https://github.com/ruslo/hunter/archive/${HUNTER_GATE_VERSION}.tar.gz"
+    SHA1 ${HUNTER_GATE_SHA1}
 )
 
 project(OpenCV CXX C)
